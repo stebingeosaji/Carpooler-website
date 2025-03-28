@@ -302,7 +302,7 @@ offerride.html                                                                  
     </div>
 
     <!-- Load Google Maps API with Places Library -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyQ74vJ28WKjO0Pp5T3nWNGK521Htu1w4&libraries=places&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=your_api_key&libraries=places&callback=initMap" async defer></script>
 
     <script>
         let map;
