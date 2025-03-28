@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find a Ride - Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+              * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: url('https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Overlay to make text readable */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent white overlay */
+            z-index: -1;
+        }
+
+        /* Navigation Bar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #fff;
+            width: 100%;
+            max-width: 1200px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: #333;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #ff6f61;
+        }
+
+        /* Main Content */
+        .container {
+            background: #fff;
+            border-radius: 15px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            font-weight: 300;
+            margin: 0;
+        }
+
+        /* Ride Cards */
+        .ride-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .ride-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .ride-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .ride-card .details {
+            flex: 1;
+        }
+
+        .ride-card .details h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .ride-card .details p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0.25rem 0;
+        }
+
+        .ride-card .details .driver {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ride-card .details .driver img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .ride-card .details .driver span {
+            font-weight: 500;
+        }
+
+        .ride-card .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ride-card .actions button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            background: #ff6f61;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .ride-card .actions button:hover {
+            background: #ff4a3d;
+        }
+
+        .ride-card .actions button.secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .ride-card .actions button.secondary:hover {
+            background: #d0d0d0;
+        }
+
+        /* No Rides Found */
+        .no-rides {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .no-rides h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-rides p {
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .ride-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .ride-card .actions {
+                width: 100%;
+            }
+
+            .ride-card .actions button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <nav>
+            <a href="homepage.html">Home</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="header">
+            <h1>Available Rides</h1>
+            <p>Choose from the available rides for your journey.</p>
+        </div>
+
+        <!-- Ride List -->
+        <div class="ride-list">
+            <!-- Ride cards will be dynamically populated here -->
+        </div>
+    </div>
+
+    <script>
+        // Fetch rides from localStorage
+        function fetchRides() {
+            const rides = JSON.parse(localStorage.getItem('rides')) || [];
+
+            const rideList = document.querySelector('.ride-list');
+            rideList.innerHTML = ''; // Clear existing cards
+
+            if (rides.length > 0) {
+                rides.forEach(ride => {
+                    const rideCard = document.createElement('div');
+                    rideCard.classList.add('ride-card');
+                    rideCard.innerHTML = `
+                        <div class="details">
+                            <h3>${ride.vehicleType}</h3>
+                            <div class="driver">
+                                <img src="${ride.driverImage}" alt="Driver">
+                                <span>${ride.driverName}</span>
+                            </div>
+                            <p>Pickup: ${ride.pickupLocation}</p>
+                            <p>Destination: ${ride.dropoffLocation}</p>
+                            <p>Time: ${ride.time}</p>
+                            <p>Seats Available: ${ride.seats}</p>
+                        </div>
+                        <div class="actions">
+                            <button onclick="bookRide('${ride._id}')">Book Now</button>
+                            <button class="secondary">View Details</button>
+                        </div>
+                    `;
+                    rideList.appendChild(rideCard);
+                });
+            } else {
+                rideList.innerHTML = `
+                    <div class="no-rides">
+                        <h2>No Rides Found</h2>
+                        <p>Sorry, there are no rides available for your selected route.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Function to handle ride booking
+        async function bookRide(rideId) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('You need to log in first.');
+                window.location.href = 'login.html'; // Redirect to login page
+                return;
+            }
+
+            try {
+                // Fetch the logged-in user's details
+                const userResponse = await fetch('http://localhost:5501/api/users/details', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                const user = await userResponse.json();
+
+                if (!userResponse.ok) {
+                    alert(user.message);
+                    return;
+                }
+
+                const riderName = user.username;
+                const riderPhone = user.phone;
+
+                // Get the rider's location and destination (you can use input fields or other logic)
+                const riderLocation = prompt('Enter your pickup location:');
+                const riderDestination = prompt('Enter your destination:');
+
+                if (!riderLocation || !riderDestination) {
+                    alert('Please enter your pickup location and destination.');
+                    return;
+                }
+
+                // Send the booking request to the backend
+                const response = await fetch(`http://localhost:5501/api/rides/${rideId}/book`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        riderName,
+                        riderPhone,
+                        riderLocation,
+                        riderDestination,
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Ride booked successfully!');
+                    window.location.href = 'dashboard.html'; // Redirect to dashboard
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error booking ride:', error);
+                alert('An error occurred while booking the ride. Please try again.');
+            }
+        }
+
+        // Fetch rides when the page loads
+        document.addEventListener('DOMContentLoaded', fetchRides);
+    </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('/homepage image.png') no-repeat center center/cover;
+    color: #333;
+}
+
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background: transparent;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    z-index: 2;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+header a:hover {
+    color: #00bcd4;
+}
+
+.signup-container {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.signup-container h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.signup-container input,
+.signup-container select {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.signup-container input:focus,
+.signup-container select:focus {
+    outline: none;
+    border-color: #00bcd4;
+}
+
+.signup-container button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 25px;
+    background: #00bcd4;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 20px;
+}
+
+.signup-container button:hover {
+    background: #008ba3;
+}
+
+.signup-container p {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.signup-container a {
+    color: #00bcd4;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-container a:hover {
+    text-decoration: underline;
+}
+
+.phone-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.phone-input select {
+    width: 70px; /* Adjust the width to fit only the country code */
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 16px;
+    background: white;
+}
+
+.phone-input input {
+    flex: 1;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}

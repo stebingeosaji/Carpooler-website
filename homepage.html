@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carpooler</title>
+    <link rel="stylesheet" href="homepage.css">
+</head>
+<body>
+    <header>
+        <h1 style="color: white;">Carpooler</h1>
+        <nav>
+            <a href="homepage.html">Home</a>
+            <a href="findaride.html" id="findRideLink">Find a Ride</a>
+            <a href="#" id="offerRideLink">Offer a Ride</a>
+            <a id="authLink" href="login.html">Login / Sign Up</a>
+        </nav>
+    </header>
+    
+    <section class="hero">
+        <h2>Find a Ride or Offer a Ride</h2>
+        <div class="buttons">
+            <button onclick="findRide()">Find a Ride</button>
+            <button onclick="offerRide()">Offer a Ride</button>
+        </div>
+    </section>
+    
+    <section class="features">
+        <div class="feature-card" id="find">
+            <h3>Find a Ride</h3>
+            <p>Connect with verified drivers going your way.</p>
+        </div>
+        <div class="feature-card" id="offer">
+            <h3>Offer a Ride</h3>
+            <p>Help others and save money on your trips.</p>
+        </div>
+    </section>
+    
+    <footer>
+        <p>&copy; 2025 Carpooler</p>
+    </footer>
+    
+    <script>
+        // Check if the user is authenticated
+        const token = localStorage.getItem('token');
+        const authLink = document.getElementById('authLink');
+        const offerRideLink = document.getElementById('offerRideLink');
+        const findRideLink = document.getElementById('findRideLink');
+
+        if (token) {
+            authLink.textContent = 'Dashboard';
+            authLink.href = 'dashboard.html';
+        }
+
+        offerRideLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!token) {
+                window.location.href = 'login.html';
+            } else {
+                window.location.href = 'offerride.html';
+            }
+        });
+
+        findRideLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!token) {
+                window.location.href = 'login.html';
+            } else {
+                window.location.href = 'findaride.html';
+            }
+        });
+
+        function findRide() {
+            if (!token) {
+                window.location.href = 'login.html';
+            } else {
+                window.location.href = 'findaride.html'; // Redirect to findaride.html
+            }
+        }
+
+        function offerRide() {
+            if (!token) {
+                window.location.href = 'login.html';
+            } else {
+                window.location.href = 'offerride.html'; // Redirect to offerride.html
+            }
+        }
+    </script>
+</body>
+</html>

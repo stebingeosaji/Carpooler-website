@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carpooler Dashboard</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+            margin-left: 30px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #00bcd4;
+        }
+
+        .hero {
+            background: url('/homepage image.png') no-repeat center center/cover;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+
+        .hero h2 {
+            font-size: 48px;
+            font-weight: bold;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7);
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            color: #fff;
+        }
+
+        .user-details {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            position: relative;
+            z-index: 1;
+        }
+
+        .user-details label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .user-details input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .user-details input[readonly] {
+            background-color: #f4f4f4;
+            cursor: not-allowed;
+        }
+
+        /* Manage Rides Button */
+        .manage-rides-button {
+            background-color: #ff6f61;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .manage-rides-button:hover {
+            background-color: #ff4a3d;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 style="color: white;">Carpooler Dashboard</h1>
+        <nav>
+            <a href="homepage.html">Home</a>
+            <a href="#" id="logoutLink">Logout</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h2>Welcome to Your Dashboard</h2>
+        <!-- User Details Section -->
+        <div class="user-details">
+            <h3>Your Profile</h3>
+            <label for="name">Name:</label>
+            <input type="text" id="name" readonly>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" readonly>
+
+            <label for="gender">Gender:</label>
+            <input type="text" id="gender" readonly>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" readonly>
+
+            <!-- Manage Rides Button -->
+            <button class="manage-rides-button" onclick="redirectToManageRides()">Manage Rides</button>
+        </div>
+    </section>
+
+    <script>
+        // Check if the user is authenticated
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html'; // Redirect to login if not authenticated
+        }
+
+        // Fetch user details from the backend
+        async function fetchUserDetails() {
+            try {
+                const response = await fetch('http://localhost:5501/api/users/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                const user = await response.json();
+
+                // Populate user details
+                if (user) {
+                    document.getElementById('name').value = user.username || 'N/A';
+                    document.getElementById('email').value = user.email || 'N/A';
+                    document.getElementById('gender').value = user.gender || 'N/A';
+                    document.getElementById('phone').value = user.phone || 'N/A';
+                }
+            } catch (error) {
+                console.error('Error fetching user details:', error);
+                alert('An error occurred while fetching user details. Please try again.');
+            }
+        }
+
+        fetchUserDetails();
+
+        // Logout functionality
+        document.getElementById('logoutLink').addEventListener('click', () => {
+            localStorage.removeItem('token'); // Remove the token from localStorage
+            window.location.href = 'login.html'; // Redirect to the login page
+        });
+
+        // Redirect to Manage Rides page
+        function redirectToManageRides() {
+            window.location.href = 'manage-ride.html';
+        }
+    </script>
+</body>
+</html>

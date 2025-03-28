@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification - Carpooler</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('/homepage image.png') no-repeat center center/cover;
+            color: #333;
+        }
+
+        .otp-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .otp-container h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .otp-container p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .otp-container input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .otp-container input:focus {
+            border-color: #00bcd4;
+        }
+
+        .otp-container button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            background: #00bcd4;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .otp-container button:hover {
+            background: #008ba3;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .otp-container {
+                padding: 20px;
+            }
+
+            .otp-container h2 {
+                font-size: 28px;
+            }
+
+            .otp-container p {
+                font-size: 14px;
+            }
+
+            .otp-container input {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .otp-container button {
+                font-size: 16px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="otp-container">
+        <h2>OTP Verification</h2>
+        <p>An OTP has been sent to your registered E-mail Id.</p>
+        <input type="text" id="otp" placeholder="Enter OTP" required maxlength="6">
+        <div id="otpError" class="error-message">Invalid OTP. Please try again.</div>
+        <button onclick="verifyOTP()">Verify OTP</button>
+    </div>
+
+    <script>
+        // Function to verify OTP
+        async function verifyOTP() {
+            const enteredOTP = document.getElementById('otp').value;
+            const userData = JSON.parse(localStorage.getItem('userData')); // Retrieve user data from localStorage
+
+            try {
+                const response = await fetch('http://localhost:5501/api/auth/verify-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: userData.email, otp: enteredOTP }), // Send email and OTP
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('OTP verified successfully! You are now signed up.');
+                    localStorage.setItem('token', data.token); // Store token in localStorage
+                    localStorage.removeItem('userData'); // Clear user data from local storage
+                    window.location.href = 'dashboard.html'; // Redirect to dashboard
+                } else {
+                    document.getElementById('otpError').style.display = 'block'; // Show error message
+                }
+            } catch (error) {
+                console.error('Error verifying OTP:', error);
+                alert('An error occurred while verifying the OTP. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>

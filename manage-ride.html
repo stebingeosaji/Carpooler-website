@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Ride</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: #000; /* Black color for the Home button */
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #ff6f61; /* Hover color matching offer-ride.html */
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 15px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-top: 80px; /* Add margin to avoid overlap with the header */
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .ride-card {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .ride-card h3 {
+            color: #555;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .ride-card p {
+            font-size: 1rem;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .ride-card ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .ride-card li {
+            background: #fff;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+
+        .ride-card button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .ride-card button:hover {
+            background-color: #ff6b81;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .ride-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .ride-card p {
+                font-size: 0.9rem;
+            }
+
+            .ride-card button {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <nav>
+            <a href="homepage.html">Home</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Manage Your Rides</h1>
+        <div id="rideDetails">
+            <!-- Ride cards will be dynamically populated here -->
+        </div>
+    </div>
+
+    <script>
+        // Check if the user is logged in and has a valid token
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                alert('You need to log in first.');
+                window.location.href = 'login.html'; // Redirect to login page
+                return;
+            }
+
+            // Fetch all rides for the logged-in user
+            fetchUserRides();
+        });
+
+        // Fetch all rides for the logged-in user
+        async function fetchUserRides() {
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch('http://localhost:5501/api/rides/user', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    const rideDetails = document.getElementById('rideDetails');
+                    rideDetails.innerHTML = ''; // Clear previous content
+
+                    if (data.rides.length > 0) {
+                        data.rides.forEach((ride) => {
+                            const rideCard = document.createElement('div');
+                            rideCard.classList.add('ride-card');
+                            rideCard.innerHTML = `
+                                <h3>${ride.vehicleType}</h3>
+                                <p>Driver: ${ride.driverName}</p>
+                                <p>Pickup: ${ride.pickupLocation}</p>
+                                <p>Destination: ${ride.dropoffLocation}</p>
+                                <p>Date: ${ride.date}</p>
+                                <p>Time: ${ride.time}</p>
+                                <p>Seats Available: ${ride.seats}</p>
+                                <h4>Booked Riders:</h4>
+                                <ul>
+                                    ${ride.riders.map(rider => `
+                                        <li>
+                                            <p>Name: ${rider.name}</p>
+                                            <p>Phone: ${rider.phone}</p>
+                                            <p>Location: ${rider.location}</p>
+                                            <p>Destination: ${rider.destination}</p>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                                <button onclick="deleteRide('${ride._id}')">Delete Ride</button>
+                            `;
+                            rideDetails.appendChild(rideCard);
+                        });
+                    } else {
+                        rideDetails.innerHTML = '<p>No rides found.</p>';
+                    }
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error fetching user rides:', error);
+                alert('An error occurred while fetching your rides. Please try again.');
+            }
+        }
+
+        // Delete ride
+        async function deleteRide(rideId) {
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch(`http://localhost:5501/api/rides/${rideId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Ride deleted successfully!');
+                    fetchUserRides(); // Refresh the list of rides
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error deleting ride:', error);
+                alert('An error occurred while deleting the ride. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>

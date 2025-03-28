@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Carpooler</title>
+    <link rel="stylesheet" href="signup.css">
+</head>
+<body>
+    <header>
+        <a href="homepage.html">Home</a>
+    </header>
+    <div class="signup-container">
+        <h2>Sign Up for Carpooler</h2>
+        <form id="signupForm">
+            <!-- Full Name -->
+            <input type="text" id="fullName" placeholder="Full Name" required>
+
+            <!-- Username -->
+            <input type="text" id="username" placeholder="Username" required>
+
+            <!-- Email ID -->
+            <input type="email" id="email" placeholder="Email ID" required>
+
+            <!-- Phone Number -->
+            <div class="phone-input">
+                <select id="countryCode">
+                    <option value="+91">+91 (India)</option>
+                    <!-- Add more country codes if needed -->
+                </select>
+                <input type="tel" id="phone" placeholder="Phone Number" required maxlength="10">
+            </div>
+
+            <!-- Gender -->
+            <select id="gender" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+
+            <!-- Password -->
+            <input type="password" id="password" placeholder="Password" required>
+
+            <!-- Re-enter Password -->
+            <input type="password" id="rePassword" placeholder="Re-enter Password" required>
+            <div id="passwordError" class="error-message" style="display:none;">Passwords do not match.</div>
+
+            <!-- Generate OTP Button -->
+            <button type="button" onclick="generateOTP()">Generate OTP</button>
+        </form>
+
+        <p>Already have an account? <a href="login.html">Login</a></p>
+    </div>
+
+    <script>
+        // Function to generate OTP
+        async function generateOTP() {
+            const fullName = document.getElementById('fullName').value;
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const countryCode = document.getElementById('countryCode').value;
+            const phone = document.getElementById('phone').value;
+            const gender = document.getElementById('gender').value;
+            const password = document.getElementById('password').value;
+            const rePassword = document.getElementById('rePassword').value;
+
+            // Check if passwords match
+            if (password !== rePassword) {
+                document.getElementById('passwordError').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('passwordError').style.display = 'none';
+            }
+
+            try {
+                const response = await fetch('http://localhost:5501/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        fullName,
+                        username,
+                        email,
+                        phone: `${countryCode}${phone}`,
+                        gender,
+                        password,
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Store user data and OTP in local storage
+                    localStorage.setItem('userData', JSON.stringify({ email: data.email, otp: data.otp }));
+                    alert('OTP sent to your email. Please verify.');
+                    window.location.href = 'otp-verification.html'; // Redirect to OTP verification page
+                } else {
+                    alert(data.message || 'Registration failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error during registration:', error);
+                alert('An error occurred during registration. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>

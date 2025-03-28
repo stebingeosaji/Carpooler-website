@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find a Ride</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: url('/homepage image.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        /* Navigation Bar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #00bcd4;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
+            margin-top: 60px;
+        }
+
+        /* Custom Scrollbar */
+        .container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            font-weight: 300;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: background 0.3s ease;
+        }
+
+        .form-group input:focus {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .form-group .input-with-button {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-group .input-with-button input {
+            flex: 1;
+        }
+
+        .form-group .input-with-button button {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            background: #ff6f61; /* Same as "Find a Ride" button */
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .form-group .input-with-button button:hover {
+            background: #ff4a3d; /* Hover color */
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            background: #ff6f61;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background: #ff4a3d;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            position: relative;
+            color: #000;
+        }
+
+        .modal-content #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .modal-content .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #000;
+        }
+
+        .modal-content .current-location-btn {
+            margin-top: 10px;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            background: #ff6f61;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <nav>
+            <a href="homepage.html">Home</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="header">
+            <h1>Find a Ride</h1>
+            <p>Your journey starts here. Book a ride in just a few clicks!</p>
+        </div>
+        <form id="rideForm">
+            <!-- Pickup Location -->
+            <div class="form-group">
+                <label for="pickup">Pickup Location</label>
+                <div class="input-with-button">
+                    <input type="text" id="pickup" name="pickup" placeholder="Enter pickup location" required>
+                    <button type="button" onclick="openMapModal('pickup')">Browse</button>
+                </div>
+            </div>
+
+            <!-- Destination -->
+            <div class="form-group">
+                <label for="destination">Destination</label>
+                <div class="input-with-button">
+                    <input type="text" id="destination" name="destination" placeholder="Enter destination" required>
+                    <button type="button" onclick="openMapModal('destination')">Browse</button>
+                </div>
+            </div>
+
+            <!-- Date -->
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <!-- Time -->
+            <div class="form-group">
+                <label for="time">Time</label>
+                <input type="time" id="time" name="time" required>
+            </div>
+
+            <!-- Number of Passengers -->
+            <div class="form-group">
+                <label for="passengers">Number of Passengers</label>
+                <input type="number" id="passengers" name="passengers" min="1" max="6" value="1" required>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit">Find a Ride</button>
+        </form>
+    </div>
+
+    <!-- Modal for Google Maps -->
+    <div id="mapModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeMapModal()">&times;</span>
+            <div id="map"></div>
+            <button class="current-location-btn" onclick="getCurrentLocation()">Use Current Location</button>
+        </div>
+    </div>
+
+    <!-- Load Google Maps API with Places Library -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyQ74vJ28WKjO0Pp5T3nWNGK521Htu1w4&libraries=places&callback=initMap" async defer></script>
+
+    <script>
+        let map;
+        let marker;
+        let selectedField;
+
+        // Initialize Google Maps and Autocomplete
+        function initMap() {
+            const pickupInput = document.getElementById('pickup');
+            const destinationInput = document.getElementById('destination');
+
+            const pickupAutocomplete = new google.maps.places.Autocomplete(pickupInput);
+            const destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput);
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 0, lng: 0 },
+                zoom: 2,
+            });
+
+            map.addListener('click', (event) => {
+                if (marker) {
+                    marker.setMap(null);
+                }
+                marker = new google.maps.Marker({
+                    position: event.latLng,
+                    map: map,
+                });
+
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ location: event.latLng }, (results, status) => {
+                    if (status === 'OK' && results[0]) {
+                        document.getElementById(selectedField).value = results[0].formatted_address;
+                    }
+                });
+            });
+        }
+
+        function openMapModal(field) {
+            selectedField = field;
+            document.getElementById('mapModal').style.display = 'flex';
+        }
+
+        function closeMapModal() {
+            document.getElementById('mapModal').style.display = 'none';
+        }
+
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+
+                        map.setCenter(pos);
+                        map.setZoom(15);
+
+                        if (marker) {
+                            marker.setMap(null);
+                        }
+                        marker = new google.maps.Marker({
+                            position: pos,
+                            map: map,
+                        });
+
+                        const geocoder = new google.maps.Geocoder();
+                        geocoder.geocode({ location: pos }, (results, status) => {
+                            if (status === 'OK' && results[0]) {
+                                const address = results[0].formatted_address;
+                                document.getElementById(selectedField).value = address;
+                                console.log('Current Location:', address);
+                            } else {
+                                console.error('Geocoder failed due to:', status);
+                                alert('Unable to retrieve your current location. Please enter it manually.');
+                            }
+                        });
+                    },
+                    (error) => {
+                        console.error('Error getting current location:', error);
+                        alert('Unable to retrieve your current location. Please enter it manually.');
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0,
+                    }
+                );
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        document.getElementById('rideForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const pickup = document.getElementById('pickup').value;
+            const destination = document.getElementById('destination').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const passengers = document.getElementById('passengers').value;
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('You need to log in first.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5501/api/rides/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ pickup, destination, date, time, passengers }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('rides', JSON.stringify(data.rides));
+                    window.location.href = 'find-ride-results.html';
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error fetching rides:', error);
+                alert('Error fetching rides. Please try again later.');
+            }
+        });
+    </script>
+</body>
+</html>

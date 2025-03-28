@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride Offered Successfully</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: url('/homepage image.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .container h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .container p {
+            font-size: 1rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        .container a,
+        .container button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            background: #ff6f61;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.3s ease;
+            cursor: pointer;
+            margin: 0.5rem; /* Add margin between buttons */
+        }
+
+        .container a:hover,
+        .container button:hover {
+            background: #ff4a3d;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ride Offered Successfully!</h1>
+        <p>Your ride has been successfully offered. You can view your ride details in your dashboard.</p>
+        <a href="dashboard.html">Go to Dashboard</a>
+        <button onclick="manageRide()">Manage Ride</button>
+    </div>
+
+    <script>
+        function manageRide() {
+            const rideId = localStorage.getItem('currentRideId');
+            if (!rideId) {
+                alert('Ride ID is missing. Please offer a ride first.');
+                return;
+            }
+            window.location.href = 'manage-ride.html'; // Redirect to manage ride page
+        }
+    </script>
+</body>
+</html>
